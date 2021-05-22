@@ -1,0 +1,77 @@
+<html lang="en">
+
+<head>
+    <title>number</title>
+    <script>
+        var t;
+        var val;
+        function heavydriver() {
+            var entered = document.getElementById("number").value;
+            if (entered >= 10) {
+                alert("Please enter value less than 10");
+                stop();
+            }
+            else if (entered >= 0) {
+                var p = document.getElementById("disp");
+                var current = p.childNodes.length;
+                var i;
+                if (entered==0){
+                	stop();
+                	val = current;
+                    t = setInterval(remove, 1000);
+                }
+                else if (entered > current) {
+                    stop();
+                    val = entered - current;
+                    t = setInterval(add, 1000);
+                }
+                else if (entered < current) {
+                    stop();
+                    val = current - entered;
+                    t = setInterval(remove, 1000);
+                }
+            }
+        }
+        function add() {
+            if (val==0) {
+                clearInterval(t);
+            }
+            else {
+                var p = document.getElementById("disp");
+                var n = p.childNodes.length + 1;
+                var c = document.createElement("img");
+                var nc = n.toString(10);
+                var fname = "fig" + nc + ".png"
+                c.src = fname;
+                c.height = "100";
+                c.width = "100";
+                p.appendChild(c);
+                val--;
+            }
+        }
+        function remove() {
+            if (val==0) {
+                clearInterval(t);
+            }
+            else {
+                var p = document.getElementById("disp");
+                var chlist = p.childNodes;
+                var n = chlist.length;
+                p.removeChild(chlist[n - 1]);
+                val--;
+            }
+        }
+        function stop() {
+            clearTimeout(t);
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id="disp"></div>
+    <h2>Enter a number</h2>
+    <input id="number" type="text" onkeyup="heavydriver()" />
+</body>
+
+</html>
