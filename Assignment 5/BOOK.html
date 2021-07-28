@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <script>
+        function suggest(h) {
+            if (h.length < 1) {
+                document.getElementById("display").innerHTML = "";
+                return;
+            }
+            var x = new XMLHttpRequest();
+            x.onreadystatechange = function() {
+                if (x.readyState == 4 && x.status == 200)
+                    document.getElementById("display").innerHTML = x.responseText;
+            }
+            x.open("GET", "book.php?q=" + h, true);
+            x.send();
+        }
+    </script>
+    <style>
+        .container {
+            max-width: 38em;
+            padding: 1em 3em 2em 3em;
+            margin: 0em auto;
+            background-color: rgb(243, 237, 237);
+            border-radius: 6px;
+            box-shadow: 0px 3px 10px -2px rgba(204, 152, 152, 0.2);
+        }
+        .show {
+            border-radius: 6px;
+            margin: 1em;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 1em;
+            background-color: #DFD8BE;
+        }
+        .center{
+            text-align: center;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body style="background-color:#e0e0d1">
+    <p class="center">SEARCH FROM XML FILE</p>
+    <div class="container">
+        <h3> Enter first few characters of Author's name </h3>
+        <input id="name" value="" onkeyup="suggest(this.value)" />
+        <br>
+        <br>
+
+        <div class="show" id="display"> </div>
+    </div>
+</body>
+
+</html>

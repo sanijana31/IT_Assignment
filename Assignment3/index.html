@@ -1,0 +1,140 @@
+<html>
+<head>
+	<title>
+		Seach Box Implementation
+	</title>
+	<style>
+		.showSearch{
+			border-radius: 6px;
+            margin: 1em;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 1em;
+            background-color: #ffeecc;
+		}
+		.child {
+			border-radius: 6px;
+            margin: 2em;
+            background-color: #c59f9f;
+            color: #000;
+            position: relative;
+            font-size: 25px;
+            padding: 1em;
+        }
+        .show {
+        	border-radius: 6px;
+            margin: 1em;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 1em;
+            background-color: #ffcc99;
+        }
+        .showDetails {
+        	border-radius: 6px;
+            margin: 1em;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 1em;
+            background-color: #ffeecc;
+        }
+        .lebelColor{
+        	margin: 1em;
+        	border-radius: 4.5px;
+        	padding: 3px;
+        	font-size: 15px;
+        	border: 1px solid #73AD21; 
+        	font-family: "Arial", "Helvetica", sans-serif;
+        	width: fill-content;
+        }
+        .divStyle{
+        	margin: 1em;
+        	font-size: 17px;
+        	text-align: center;
+        	background-color: #ffdd99;
+        	font-family: "Lucida Console", "Courier New", monospace;
+        	padding: 6px 10px 6px 10px;
+        	width: fill-content;
+        	border-radius: 4.5px;
+        }
+        .center{
+        	text-align: center;
+        	font-size: 30px;
+        }
+        .container {
+            max-width: 38em;
+            padding: 1em 3em 2em 3em;
+            margin: 0em auto;
+            background-color: rgb(243, 237, 237);
+            border-radius: 6px;
+            box-shadow: 0px 3px 10px -2px rgba(204, 152, 152, 0.2);
+        }
+	</style>
+	<script>
+		function ShowSuggestions(suggestionString) {
+			if (suggestionString.length==0){
+				document.getElementById("suggestions").innerHTML="";
+				document.getElementById("details").innerHTML = "";
+        		return;
+
+			}
+			else{
+				const xmlHTTP= new XMLHttpRequest();
+				xmlHTTP.onreadystatechange=function(){
+					if (this.readyState == 4 && this.status == 200) {
+						let suggestions=document.getElementById("suggestions");
+						while(suggestions.firstChild){
+							suggestions.removeChild(suggestions.lastChild);
+						}
+						const suggestedFirstname=JSON.parse(this.responseText);
+						var div,
+							i=0;
+						for (var j in suggestedFirstname) {
+							div=document.createElement("div");
+							div.className="divStyle";
+							div.innerHTML = suggestedFirstname[j].first_name + "<br>";
+		                    div.id = "divChild" + i;
+		                    i++;
+		                    suggestions.appendChild(div);
+						}
+						return;
+					}
+				};
+				xmlHTTP.open("GET", "Query.php?firstNameSuggestion=" + suggestionString, true);
+        		xmlHTTP.send();
+			}
+		}
+		function getDetails(event){
+			const xmlHTTP = new XMLHttpRequest();
+			var details = document.getElementById("details");
+			var div=document.getElementById(event.target.id);
+			var first_name=div.innerText;
+			xmlHTTP.onreadystatechange= function() {
+				if (this.readyState == 4 && this.status == 200) {
+					const detailsData=JSON.parse(this.responseText);
+					var data="";
+					for(indexkey in detailsData[0]){
+						data += "<div class='showDetails'><label class='lebelColor'>"+indexkey+"</label>"+"<p class='divStyle'>"+detailsData[0][indexkey]+"</p>"+"<br>"+"</div>";
+					}
+					details.innerHTML=data;
+					return;
+				}
+			};
+			xmlHTTP.open("GET", "Query.php?first_name=" + first_name, true);
+			xmlHTTP.send();
+		}
+	</script>
+</head>
+<body style="background-color:#e0e0d1">
+	<p class="center">Search box</p>
+	<div class="container">
+		<div class="showSearch">
+			<label class='lebelColor' >
+				First Name
+			</label>
+			<input type="text" name="First_name" autocomplete="off" value="" onkeyup="ShowSuggestions(this.value)">
+		</div>
+		<div class="show" id="suggestions" value="" onclick="getDetails(event)"></div>
+		<div class="showDetails" id="details" value=""></div>
+	</div>
+</body>
+</html>

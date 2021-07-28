@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <script>
+    	function btnclick() {
+		    let formdata = new FormData();
+		    let file = document.getElementById("multifile").files;
+		    let size = 0;
+
+		    let x = new XMLHttpRequest();
+		    for (let i = 0; i < file.length; i++) {
+		        size += file[i].size;
+		        formdata.append(file[i].name, file[i]);
+		    }
+
+
+		    if (size < 10000000) {
+		        x.open("POST", "upload.php", true);
+		        x.send(formdata);
+		    } else { alert("post data size exceeded"); }
+
+		}
+    </script>>
+</head>
+
+<body>
+    <h2>Send MultipleFile / SingleFile To server(MAX Size 1 MB):</h2>
+    <form action="upload.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="myfile[]" multiple />
+        <input value="Upload" type="submit" onclick="btnclick()" />
+    </form>
+    <div id="view"></div>
+</body>
+</html>
